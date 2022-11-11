@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "323842693046",
+    "firebase_url": "https://eqiapp-e33c4.firebaseio.com",
+    "project_id": "eqiapp-e33c4",
+    "storage_bucket": "eqiapp-e33c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323842693046:android:261cb56a0f09fd48095317",
+        "android_client_info": {
+          "package_name": "com.quocbao.eqinsuranceandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323842693046-74papjarnt1ud2t2l0dutrobsvdufd04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRAYcxNl_3MKJ7L5Xk19RV9oJuv3evytg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323842693046-74papjarnt1ud2t2l0dutrobsvdufd04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
