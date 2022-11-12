@@ -53,6 +53,7 @@ class PartnerController extends GetxController{
   }
 
   Future<void> requestToGetAPIInfo(String token) async {
+    isLoading.value = true;
     try{
       NotificationDetailReq notificationDetailReq = NotificationDetailReq();
       notificationDetailReq.sUserName = ConfigData.CONSUMER_KEY;
@@ -87,6 +88,7 @@ class PartnerController extends GetxController{
           }
         }
       }
+      isLoading.value = false;
     }catch(e){
       isLoading.value = false;
     }
@@ -105,14 +107,12 @@ class PartnerController extends GetxController{
 
       var response = await apiProvider.fetchDataUpdateDevice(reQuestUrl + "/UpdateUserDevice", updateDeviceReq);
       if(response != null){
-        var root = XmlDocument.parse(response);
-        String data = root.children[2].children.first.toString();
-
-        print("data....." +data);
+        print("data....." + response);
 
       }
+      isLoading.value = false;
     }catch(e){
-
+      isLoading.value = false;
     }
   }
 

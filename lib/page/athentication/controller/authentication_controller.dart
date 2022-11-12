@@ -111,21 +111,13 @@ class AuthenticationController extends GetxController{
 
       var response = await apiProvider.fetchDataUpdateDevice(reQuestUrl + "/UpdateUserDevice", updateDeviceReq);
       if(response != null){
-        var root = XmlDocument.parse(response);
-        print("data....." + root.children[2].children.first.toString());
-        String data = root.children[2].children.first.toString();
-
         try{
-          if(CheckError.isSuccess(data)){
-            var jsonObject = jsonDecode(data);
-            if(jsonObject != null){
-              var key = jsonObject['authenticatekey'] ?? '';
-              if(key != ""){
-                showHideApproveArea(true);
-                authenticateKey = key;
-              }
-            }else{
-              showHideApproveArea(false);
+          var jsonObject = jsonDecode(response);
+          if(jsonObject != null){
+            var key = jsonObject['authenticatekey'] ?? '';
+            if(key != ""){
+              showHideApproveArea(true);
+              authenticateKey = key;
             }
           }else{
             showHideApproveArea(false);
@@ -157,12 +149,9 @@ class AuthenticationController extends GetxController{
 
       var response = await apiProvider.fetchDataUpdateDevice(reQuestUrl + "/ApproveToken", approveReq);
       if(response != null){
-        var root = XmlDocument.parse(response);
-        print("data....." + root.children[2].children.first.toString());
-        String data = root.children[2].children.first.toString();
 
-        if(CheckError.isSuccess(data)){
-          var jsonObject = jsonDecode(data);
+        try{
+          var jsonObject = jsonDecode(response);
           if(jsonObject != null){
             String status = jsonObject["status"] ?? '';
             if (status != '' && status == 1) {
@@ -177,8 +166,12 @@ class AuthenticationController extends GetxController{
               showHideApproveArea(true);
               showErrorMessage("Approve failed. Please try again");
             }
+          }else{
+            showHideApproveArea(false);
+            imageApproved.value = ImageResource.ic_warning_yellow;
+            textAuthenticated.value = "Please try again.";
           }
-        }else{
+        }catch(e){
           showHideApproveArea(false);
           imageApproved.value = ImageResource.ic_warning_yellow;
           textAuthenticated.value = "Please try again.";
@@ -204,12 +197,8 @@ class AuthenticationController extends GetxController{
 
       var response = await apiProvider.fetchDataUpdateDevice(reQuestUrl + "/RejectToken", approveReq);
       if(response != null){
-        var root = XmlDocument.parse(response);
-        print("data....." + root.children[2].children.first.toString());
-        String data = root.children[2].children.first.toString();
-
-        if(CheckError.isSuccess(data)){
-          var jsonObject = jsonDecode(data);
+        try{
+          var jsonObject = jsonDecode(response);
           if(jsonObject != null){
             String status = jsonObject["status"] ?? '';
             if(status != "" && status == "1"){
@@ -220,8 +209,12 @@ class AuthenticationController extends GetxController{
               showHideApproveArea(true);
               showErrorMessage('"Reject failed. Please try again"');
             }
+          }else{
+            showHideApproveArea(false);
+            imageApproved.value = ImageResource.ic_warning_yellow;
+            textAuthenticated.value = "Please try again.";
           }
-        }else{
+        }catch(e){
           showHideApproveArea(false);
           imageApproved.value = ImageResource.ic_warning_yellow;
           textAuthenticated.value = "Please try again.";
