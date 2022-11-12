@@ -11,8 +11,10 @@ import 'package:eqinsuranceandroid/page/notification/models/notification_req.dar
 import 'package:eqinsuranceandroid/page/notification/models/notification_res.dart';
 import 'package:eqinsuranceandroid/page/register/controller/check_error.dart';
 import 'package:eqinsuranceandroid/page/webview/model/get_contact_req.dart';
+import 'package:eqinsuranceandroid/splash_page.dart';
 import 'package:eqinsuranceandroid/widgets/dialog/error_dialog.dart';
 import 'package:eqinsuranceandroid/widgets/dialog/home_dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xml/xml.dart';
@@ -49,6 +51,25 @@ class HomeController extends GetxController{
     refreshNotificationCount();
     openPopupNotification();
   }
+
+  @override
+  void onReady() {
+    initFirebaseMessage();
+    super.onReady();
+  }
+
+  void initFirebaseMessage(){
+    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      print('Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
+      Get.toNamed(GetListPages.AUTHENTICATION);
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
+      Get.toNamed(GetListPages.AUTHENTICATION);
+    });
+  }
+
 
   Future<void> openPopupNotification() async {
 
