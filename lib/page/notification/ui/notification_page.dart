@@ -42,7 +42,7 @@ class NotificationPage extends GetView<NotificationController>{
                 alignment: Alignment.center,
                 child: Text(
                     "Select",
-                    style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400)
+                    style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500)
                 ),
               ),
               onTap: (){

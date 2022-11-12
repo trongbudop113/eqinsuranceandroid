@@ -40,17 +40,19 @@ class PublicUserPage extends GetView<PublicUserController>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(width: 20),
+                        SizedBox(width: 15),
                         GestureDetector(
                           onTap: (){
                             Get.back();
                           },
                           child: Container(
                             color: Colors.transparent,
+                            width: 22,
+                            padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Image.asset(ImageResource.ic_back, width: 12),
                           ),
                         ),
-                        SizedBox(width: 60),
+                        SizedBox(width: 55),
                         Spacer(flex: 1),
                         Text("EQ Insurance", style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 20, color: ColorResource.color_content_popup, fontWeight: FontWeight.bold)),
                         Spacer(flex: 1),

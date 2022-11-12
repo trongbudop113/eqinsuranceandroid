@@ -45,13 +45,15 @@ class VerifyPhonePage extends StatelessWidget {
                           },
                           child: Container(
                             color: Colors.transparent,
-                            child: Image.asset(ImageResource.ic_back, width: 12,),
+                            width: 22,
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: Image.asset(ImageResource.ic_back, width: 12),
                           ),
                         ),
                         Spacer(flex: 1),
                         Text("Verification", style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 20, color: ColorResource.page_title_textColor, fontWeight: FontWeight.bold)),
                         Spacer(flex: 1),
-                        SizedBox(width: 17),
+                        SizedBox(width: 27),
                       ],
                     )
                 ),

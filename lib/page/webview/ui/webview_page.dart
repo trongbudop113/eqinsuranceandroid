@@ -39,17 +39,19 @@ class WebViewPage extends GetView<WebViewAppController>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(width: 20),
+                        SizedBox(width: 15),
                         GestureDetector(
                           onTap: (){
                             Get.back();
                           },
                           child: Container(
                             color: Colors.transparent,
+                            width: 22,
+                            padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Image.asset(ImageResource.ic_back, width: 12),
                           ),
                         ),
-                        SizedBox(width: 60),
+                        SizedBox(width: 55),
                         Spacer(flex: 1),
                         Obx(() => Text(
                             controller.pageTitle.value, style: StyleResource.TextStyleBlack(context)
