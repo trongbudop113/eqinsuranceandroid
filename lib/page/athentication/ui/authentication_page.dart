@@ -103,14 +103,14 @@ class AuthenticationPage extends GetView<AuthenticationController>{
                         ),
                       ],
                     ),
-                    replacement: Column(
+                    replacement: Obx(() => Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(controller.imageApproved.value, width: 170),
                         SizedBox(height: 10),
                         Text(controller.textAuthenticated.value, style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 14, color: ColorResource.color_title_authen)),
                       ],
-                    ),
+                    )),
                   )),
                 ),
               )

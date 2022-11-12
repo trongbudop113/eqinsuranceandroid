@@ -1,14 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:eqinsuranceandroid/configs/configs_data.dart';
 import 'package:eqinsuranceandroid/configs/shared_config_name.dart';
-import 'package:eqinsuranceandroid/get_pages.dart';
 import 'package:eqinsuranceandroid/network/api_name.dart';
 import 'package:eqinsuranceandroid/network/api_provider.dart';
-import 'package:eqinsuranceandroid/page/change_sc/models/change_sc_req.dart';
 import 'package:eqinsuranceandroid/page/register/controller/check_error.dart';
-import 'package:eqinsuranceandroid/page/register/models/login_req.dart';
 import 'package:eqinsuranceandroid/page/webview/models/notification_detail_req.dart';
 import 'package:eqinsuranceandroid/page/webview/models/update_device_req.dart';
 import 'package:eqinsuranceandroid/resource/image_resource.dart';
@@ -34,11 +30,12 @@ class AuthenticationController extends GetxController{
   final RxString textAuthenticated = "Authenticated".obs;
   final RxString imageApproved = ImageResource.ic_complete.obs;
 
-  String AuthenticateKey = "";
+  String authenticateKey = "";
 
   String fireBaseKey = "", requestTokenUrl = "", completeTokenUrl = "", apiUsername = "", apiKey = "";
 
   final RxBool isLoading = false.obs;
+  bool isAuthorized = false;
 
   @override
   void onInit() {
@@ -48,8 +45,9 @@ class AuthenticationController extends GetxController{
 
   Future<void> checkAuthentication() async {
     String userId =  await SharedConfigName.getUserID();
-    if (userId.isNotEmpty)
+    if (userId.isNotEmpty) {
       requestToGetAPIInfo();
+    }
   }
 
   Future<void> requestToGetAPIInfo() async {
@@ -101,7 +99,6 @@ class AuthenticationController extends GetxController{
   }
 
   Future<void> requestToUpdateDeviceAPI(String requestKey) async {
-    isLoading.value = true;
     try{
       final String requestKeyCopy = requestKey;
       String reQuestUrl = requestTokenUrl.substring(0, requestTokenUrl.indexOf("/RequestToken"));
@@ -121,7 +118,15 @@ class AuthenticationController extends GetxController{
         try{
           if(CheckError.isSuccess(data)){
             var jsonObject = jsonDecode(data);
-            showHideApproveArea(true);
+            if(jsonObject != null){
+              var key = jsonObject['authenticatekey'] ?? '';
+              if(key != ""){
+                showHideApproveArea(true);
+                authenticateKey = key;
+              }
+            }else{
+              showHideApproveArea(false);
+            }
           }else{
             showHideApproveArea(false);
             imageApproved.value = ImageResource.ic_warning_yellow;
@@ -148,7 +153,7 @@ class AuthenticationController extends GetxController{
       String reQuestUrl = requestTokenUrl.substring(0, requestTokenUrl.indexOf("/RequestToken"));
 
       ApproveReq approveReq = ApproveReq();
-      approveReq.RequestToken = AuthenticateKey;
+      approveReq.RequestToken = authenticateKey;
 
       var response = await apiProvider.fetchDataUpdateDevice(reQuestUrl + "/ApproveToken", approveReq);
       if(response != null){
@@ -157,7 +162,22 @@ class AuthenticationController extends GetxController{
         String data = root.children[2].children.first.toString();
 
         if(CheckError.isSuccess(data)){
-
+          var jsonObject = jsonDecode(data);
+          if(jsonObject != null){
+            String status = jsonObject["status"] ?? '';
+            if (status != '' && status == 1) {
+              showHideApproveArea(false);
+              isAuthorized = true;
+              showAuthenticationPortal();
+            } else if (status != "" && status == "2") {
+              showHideApproveArea(false);
+              showErrorMessage("Your requested token was expired");
+            }
+            else {
+              showHideApproveArea(true);
+              showErrorMessage("Approve failed. Please try again");
+            }
+          }
         }else{
           showHideApproveArea(false);
           imageApproved.value = ImageResource.ic_warning_yellow;
@@ -180,7 +200,7 @@ class AuthenticationController extends GetxController{
       String reQuestUrl = requestTokenUrl.substring(0, requestTokenUrl.indexOf("/RequestToken"));
 
       ApproveReq approveReq = ApproveReq();
-      approveReq.RequestToken = AuthenticateKey;
+      approveReq.RequestToken = authenticateKey;
 
       var response = await apiProvider.fetchDataUpdateDevice(reQuestUrl + "/RejectToken", approveReq);
       if(response != null){
@@ -189,10 +209,17 @@ class AuthenticationController extends GetxController{
         String data = root.children[2].children.first.toString();
 
         if(CheckError.isSuccess(data)){
-          if(data == '0'){
-            
-          }else{
-            showErrorMessage('"Reject failed. Please try again"');
+          var jsonObject = jsonDecode(data);
+          if(jsonObject != null){
+            String status = jsonObject["status"] ?? '';
+            if(status != "" && status == "1"){
+              showHideApproveArea(false);
+              imageApproved.value = ImageResource.ic_warning_yellow;
+              textAuthenticated.value = "Rejected";
+            }else{
+              showHideApproveArea(true);
+              showErrorMessage('"Reject failed. Please try again"');
+            }
           }
         }else{
           showHideApproveArea(false);
@@ -225,11 +252,12 @@ class AuthenticationController extends GetxController{
     );
   }
 
-  void showAuthenticationPortal(){
-    showDialog(
+  Future<void> showAuthenticationPortal() async {
+    await showDialog(
       context: Get.context!,
       builder: (_) => PortalDialog(authenticationController: this),
     );
+    Get.back();
   }
 
 }
