@@ -25,12 +25,14 @@ class NotificationController extends GetxController{
   ApiProvider apiProvider = ApiProvider();
 
   final RxList<NotificationRes> listNotification = <NotificationRes>[].obs;
+  final List<NotificationRes> listNotificationTemp = <NotificationRes>[];
 
   final RxBool isSelected = false.obs;
 
   final RxBool isLoading = true.obs;
+  final RxBool isLoadMore = true.obs;
 
-  int page = 1;
+  int page = 0;
   int limit = 10;
   bool noMorePage = false;
   int totalPages = 0;
@@ -42,13 +44,14 @@ class NotificationController extends GetxController{
 
   @override
   void onInit() {
+    initData();
     getNotification();
     super.onInit();
   }
 
   Future<void> initData() async {
     limit = await SharedConfigName.getNotificationsPerPage();
-    limit = 10000;
+//
   }
 
   Future<void> getNotification() async {
@@ -69,19 +72,101 @@ class NotificationController extends GetxController{
       String jsonString = root.children[2].children.first.toString();
       NotificationDataRes notificationDataRes = NotificationDataRes.fromJson(jsonDecode(jsonString));
       print("data....." + notificationDataRes.data!.length.toString());
-      listNotification.clear();
-      listNotification.addAll(notificationDataRes.data ?? []);
+      listNotificationTemp.clear();
+      listNotificationTemp.addAll(notificationDataRes.data ?? []);
 
-      int totalItems = listNotification.length;
+      int totalItems = listNotificationTemp.length;
 
       if(totalItems > 0){
         totalPages = (totalItems/limit + (totalItems % limit == 0 ? 0 : 1)).toInt();
+        listNotification.clear();
+        if(totalItems >=  limit){
+          var newList = listNotificationTemp.getRange(page * limit, limit);
+          listNotification.addAll(newList);
+          isLoadMore.value = true;
+          page++;
+        }else{
+          listNotification.addAll(listNotificationTemp);
+          isLoadMore.value = false;
+        }
         displayNotificationList();
       }else{
         totalPages = 0;
+        isLoadMore.value = false;
       }
     }
     isLoading.value = false;
+  }
+
+  Future<void> refreshNotification() async {
+    isLoading.value = true;
+    try{
+      page = 0;
+      String agentCode = await SharedConfigName.getAgentCode();
+
+      GetNotificationReq getNotificationReq = GetNotificationReq();
+      getNotificationReq.sUserName = ConfigData.CONSUMER_KEY;
+      getNotificationReq.sPassword = ConfigData.CONSUMER_SECRET;
+      getNotificationReq.sType = ConfigData.PUBLIC;
+      getNotificationReq.sAgentCode = agentCode;
+
+
+      var response = await apiProvider.fetchData(ApiName.Notification, getNotificationReq);
+      if(response != null){
+        var root = XmlDocument.parse(response);
+        print("data....." + root.children[2].children.first.toString());
+        String jsonString = root.children[2].children.first.toString();
+        NotificationDataRes notificationDataRes = NotificationDataRes.fromJson(jsonDecode(jsonString));
+        print("data....." + notificationDataRes.data!.length.toString());
+        listNotificationTemp.clear();
+        listNotificationTemp.addAll(notificationDataRes.data ?? []);
+
+        int totalItems = listNotificationTemp.length;
+
+        if(totalItems > 0){
+          totalPages = (totalItems/limit + (totalItems % limit == 0 ? 0 : 1)).toInt();
+          listNotification.clear();
+          if(totalItems >=  limit){
+            var newList = listNotificationTemp.getRange(page * limit, limit);
+            listNotification.addAll(newList);
+            isLoadMore.value = true;
+            page++;
+          }else{
+            listNotification.addAll(listNotificationTemp);
+            isLoadMore.value = false;
+          }
+          displayNotificationList();
+        }else{
+          totalPages = 0;
+          isLoadMore.value = false;
+        }
+      }
+      isLoading.value = false;
+    }catch(e){
+      isLoading.value = false;
+    }
+  }
+
+  void loadMoreData(){
+    List<NotificationRes> newList = [];
+    if(totalPages == (page + 1)){
+      newList = listNotificationTemp.getRange(page * limit, listNotificationTemp.length  - 1).toList();
+      isLoadMore.value = false;
+    }else{
+      newList = listNotificationTemp.getRange(page * limit, (page + 1) * limit).toList();
+      isLoadMore.value = true;
+    }
+    listNotification.addAll(newList);
+    page++;
+
+    for(int i = 0; i < listNotification.length; i++){
+      if(listNotificationRead.contains(listNotification[i].iD)){
+        listNotification[i].isRead.value = true;
+      }
+      if(listNotificationDeleted.contains(listNotification[i].iD)){
+        listNotification.removeAt(i);
+      }
+    }
   }
 
   Future<void> displayNotificationList() async {

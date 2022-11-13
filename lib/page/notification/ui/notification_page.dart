@@ -87,77 +87,116 @@ class NotificationPage extends GetView<NotificationController>{
             height: double.maxFinite,
             padding: EdgeInsets.all(7),
             child: Container(
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-              ),
-              child: Obx(() => ListView.builder(
-                itemCount: controller.listNotification.length,
-                itemBuilder: (ctx, index){
-                  return GestureDetector(
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Obx(() => Visibility(
-                                      visible: controller.isSelected.value,
-                                      child: controller.selectedCheckbox(controller.listNotification[index].isCheck.value),
-                                      replacement: SizedBox(height: 12)
-                                  )),
-                                  SizedBox(height: 2),
-                                  Obx(() => Image.asset(
-                                      !controller.listNotification[index].isRead.value
-                                          ? ImageResource.unread_notification : ImageResource.read_notification,
-                                      width: 30, height: 30)
-                                  ),
-                                ],
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5))
+                ),
+                child: Obx(() => Visibility(
+                  visible: controller.listNotification.length > 0,
+                  child: RefreshIndicator(
+                    child: ListView.builder(
+                      itemCount: controller.listNotification.length,
+                      itemBuilder: (ctx, index){
+                        if(index == (controller.listNotification.length - 1) && controller.isLoadMore.value){
+                          return GestureDetector(
+                            onTap: (){
+                              controller.loadMoreData();
+                            },
+                            child: Container(
+                              height: 40,
+                              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: ColorResource.link_text,
+                                  borderRadius: BorderRadius.all(Radius.circular(30))
                               ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                flex: 10,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Text(
+                                'Read more',
+                                style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          );
+                        }
+                        return GestureDetector(
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Column(
+                              children: [
+                                Row(
                                   children: [
-                                    SizedBox(height: 10),
-                                    Text(
-                                      '${controller.listNotification[index].subject}',
-                                      style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 17, color: ColorResource.color_title_popup, fontWeight: FontWeight.w400),
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      maxLines: 1,
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Obx(() => Visibility(
+                                            visible: controller.isSelected.value,
+                                            child: controller.selectedCheckbox(controller.listNotification[index].isCheck.value),
+                                            replacement: SizedBox(height: 12)
+                                        )),
+                                        SizedBox(height: 2),
+                                        Obx(() => Image.asset(
+                                            !controller.listNotification[index].isRead.value
+                                                ? ImageResource.unread_notification : ImageResource.read_notification,
+                                            width: 30, height: 30)
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(height: 2),
-                                    Text(
-                                      '${controller.listNotification[index].message}',
-                                      style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 17, color: ColorResource.page_title_textColor, fontWeight: FontWeight.w400),
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      maxLines: 1,
-                                    )
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      flex: 10,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(height: 10),
+                                          Text(
+                                            '${controller.listNotification[index].subject}',
+                                            style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 17, color: ColorResource.color_title_popup, fontWeight: FontWeight.w400),
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            maxLines: 1,
+                                          ),
+                                          SizedBox(height: 2),
+                                          Text(
+                                            '${controller.listNotification[index].message}',
+                                            style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 17, color: ColorResource.page_title_textColor, fontWeight: FontWeight.w400),
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            maxLines: 1,
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 3),
+                                Divider()
+                              ],
+                            ),
                           ),
-                          SizedBox(height: 3),
-                          Divider()
-                        ],
-                      ),
+                          onTap: (){
+                            controller.onSelectItem(index);
+                          },
+                        );
+                      },
                     ),
-                    onTap: (){
-                      controller.onSelectItem(index);
-                    },
-                  );
-                },
-              ))
+                    onRefresh: () => controller.refreshNotification(),
+                  ),
+                  replacement: Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                            "No notification data available",
+                            style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 17, color: ColorResource.color_title_popup, fontWeight: FontWeight.w400)),
+                      ),
+                      RefreshIndicator(
+                        child: ListView(),
+                        onRefresh: () => controller.refreshNotification(),
+                      )
+                    ],
+                  ),
+                ))
             ),
           ),
           Obx(() => LoadingPage(isLoading: controller.isLoading.value))

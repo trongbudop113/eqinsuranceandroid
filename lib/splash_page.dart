@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:eqinsuranceandroid/configs/check_network.dart';
 import 'package:eqinsuranceandroid/configs/configs_data.dart';
 import 'package:eqinsuranceandroid/configs/shared_config_name.dart';
 import 'package:eqinsuranceandroid/get_pages.dart';
 import 'package:eqinsuranceandroid/network/api_provider.dart';
 import 'package:eqinsuranceandroid/page/loading/loading_page.dart';
 import 'package:eqinsuranceandroid/resource/image_resource.dart';
+import 'package:eqinsuranceandroid/widgets/dialog/error_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -33,13 +37,26 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> initGoToPage() async {
     isLoading.value = true;
-    String? token = await initFirebase();
-    print("token....."+ token);
-    if(token.isNotEmpty){
-      await SharedConfigName.setTokenFirebase(token);
+    if(await CheckConnect.hasNetwork()){
+      String? token = await initFirebase();
+      print("token....."+ token);
+      if(token.isNotEmpty){
+        await SharedConfigName.setTokenFirebase(token);
+      }
+      isLoading.value = false;
+      initData();
+    }else{
+      isLoading.value = false;
+      showErrorMessage("Network Error, Please try again!");
     }
-    isLoading.value = false;
-    initData();
+  }
+
+  Future<void> showErrorMessage(String message) async {
+    await showDialog(
+      context: Get.context!,
+      builder: (_) => ErrorDialog(message: message),
+    );
+    exit(0);
   }
 
   late final FirebaseMessaging _firebaseMessaging;
