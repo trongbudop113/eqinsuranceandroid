@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:eqinsuranceandroid/configs/configs_data.dart';
 import 'package:eqinsuranceandroid/configs/shared_config_name.dart';
 import 'package:eqinsuranceandroid/get_pages.dart';
@@ -10,6 +11,7 @@ import 'package:eqinsuranceandroid/page/webview/model/get_contact_req.dart';
 import 'package:eqinsuranceandroid/page/webview/models/notification_detail_req.dart';
 import 'package:eqinsuranceandroid/page/webview/models/update_device_req.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:xml/xml.dart';
@@ -196,11 +198,24 @@ class PartnerController extends GetxController{
     }
   }
 
-  bool isContact = false;
+  bool checkNavigatorLink(String link){
+    if(link.startsWith("tel:")){
+      return false;
+    }else if(link.endsWith(".pdf") || link.endsWith(".doc")
+        || link.endsWith(".docx")
+        || link.endsWith(".xls")
+        || link.endsWith(".xlsx")){
+      return false;
+    }else if(link.contains("mailto")){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
 
   Future<void> onCheckLink(String link) async {
     if(link.startsWith("tel:")){
-      isContact = true;
       bool canLaunch = await canLaunchUrlString(link);
       if(canLaunch){
         launchUrlString(link);
@@ -209,20 +224,17 @@ class PartnerController extends GetxController{
         || link.endsWith(".docx")
         || link.endsWith(".xls")
         || link.endsWith(".xlsx")){
-      isContact = true;
-      downloadFile(url);
+      downloadFile(link);
+    }else if(link.contains("mailto:")){
+      launchUrlString(link);
     }
   }
 
-  void downloadFile(String url) {
-    launchUrlString(url);
+  Future<void> downloadFile(String url) async {
+    await launch(url);
   }
 
   Future<void> onReload() async {
-    if(isContact){
-      var web = await webViewController.future;
-      await web.loadUrl(url);
-      isContact = false;
-    }
+
   }
 }

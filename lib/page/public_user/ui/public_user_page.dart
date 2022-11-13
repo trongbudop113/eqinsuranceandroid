@@ -98,18 +98,25 @@ class PublicUserPage extends GetView<PublicUserController>{
                     onWebViewCreated: (WebViewController webViewController) {
                       controller.webViewController.complete(webViewController);
                     },
+                    navigationDelegate: (NavigationRequest request) {
+                      if(controller.checkNavigatorLink(request.url)){
+                        return NavigationDecision.navigate;
+                      }
+                      controller.onCheckLink(request.url);
+                      return NavigationDecision.prevent;
+                    },
                     onProgress: (int progress) {
                       print('WebView is loading (progress : $progress%)');
                     },
                     onPageStarted: (String url) {
                       controller.isLoading.value = true;
                       print('Page started loading: $url');
+                      NavigationDecision.navigate;
                       controller.onCheckLink(url);
                     },
                     onPageFinished: (String url) {
                       controller.isLoading.value = false;
                       print('Page finished loading: $url');
-                      controller.onReload();
                     },
 
                     gestureNavigationEnabled: true,
