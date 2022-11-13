@@ -57,11 +57,12 @@ class NotificationController extends GetxController{
   Future<void> getNotification() async {
     isLoading.value = true;
     String agentCode = await SharedConfigName.getAgentCode();
+    String userType = await SharedConfigName.getCurrentUserType();
 
     GetNotificationReq getNotificationReq = GetNotificationReq();
     getNotificationReq.sUserName = ConfigData.CONSUMER_KEY;
     getNotificationReq.sPassword = ConfigData.CONSUMER_SECRET;
-    getNotificationReq.sType = ConfigData.PUBLIC;
+    getNotificationReq.sType = userType;
     getNotificationReq.sAgentCode = agentCode;
 
 
@@ -103,11 +104,12 @@ class NotificationController extends GetxController{
     try{
       page = 0;
       String agentCode = await SharedConfigName.getAgentCode();
+      String userType = await SharedConfigName.getCurrentUserType();
 
       GetNotificationReq getNotificationReq = GetNotificationReq();
       getNotificationReq.sUserName = ConfigData.CONSUMER_KEY;
       getNotificationReq.sPassword = ConfigData.CONSUMER_SECRET;
-      getNotificationReq.sType = ConfigData.PUBLIC;
+      getNotificationReq.sType = userType;
       getNotificationReq.sAgentCode = agentCode;
 
 

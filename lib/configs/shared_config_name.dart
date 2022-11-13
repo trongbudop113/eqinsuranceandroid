@@ -51,7 +51,7 @@ class SharedConfigName{
     var sharedPreferences = await SharedPreferences.getInstance();
     String data =  sharedPreferences.getString(userType) ?? '';
     if(data != ''){
-      return userType;
+      return data;
     }
     return ConfigData.PUBLIC;
   }
@@ -106,9 +106,9 @@ class SharedConfigName{
     return sharedPreferences.getString(sc) ?? '';
   }
 
-  static Future<void> setRegisteredUserType(String userType) async {
+  static Future<void> setRegisteredUserType(String userTypeSet) async {
     var sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(userType, userType);
+    sharedPreferences.setString(userType, userTypeSet);
   }
 
   static Future<String> getRegisteredUserType() async {

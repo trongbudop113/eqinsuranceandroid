@@ -1,3 +1,4 @@
+import 'package:eqinsuranceandroid/configs/config_button.dart';
 import 'package:eqinsuranceandroid/configs/configs_data.dart';
 import 'package:eqinsuranceandroid/configs/shared_config_name.dart';
 import 'package:eqinsuranceandroid/network/api_name.dart';
@@ -20,10 +21,15 @@ class SettingsController extends GetxController{
 
   ApiProvider apiProvider = ApiProvider();
 
+  final RxBool isLoading = false.obs;
+
   Future<void> onClickYes() async {
+    isLoading.value = true;
     await getNotificationItemCount();
     SharedConfigName.logoutUser();
     SharedConfigName.setRegisteredUserType('');
+    await ConfigButton.singleton.showHideButton();
+    isLoading.value = false;
     Get.back();
   }
 
@@ -32,20 +38,24 @@ class SettingsController extends GetxController{
   }
 
   Future<void> getNotificationItemCount() async {
-    NotificationItemCountReq notificationItemCountReq = NotificationItemCountReq();
-    notificationItemCountReq.sUserName = ConfigData.CONSUMER_KEY;
-    notificationItemCountReq.sPassword = ConfigData.CONSUMER_SECRET;
+    try{
+      NotificationItemCountReq notificationItemCountReq = NotificationItemCountReq();
+      notificationItemCountReq.sUserName = ConfigData.CONSUMER_KEY;
+      notificationItemCountReq.sPassword = ConfigData.CONSUMER_SECRET;
 
 
-    var response = await apiProvider.fetchData(ApiName.NotificationItemCount, notificationItemCountReq);
-    if(response != null){
-      var root = XmlDocument.parse(response);
-      print("data....." + root.children[2].children.first.toString());
-      String res = root.children[2].children.first.toString();
-      int? number = int.tryParse(res);
-      SharedConfigName.setNotificationsPerPage(number ?? 0);
-    }else{
-      showErrorMessage("Cannot get NotificationItemCount!");
+      var response = await apiProvider.fetchData(ApiName.NotificationItemCount, notificationItemCountReq);
+      if(response != null){
+        var root = XmlDocument.parse(response);
+        print("data....." + root.children[2].children.first.toString());
+        String res = root.children[2].children.first.toString();
+        int? number = int.tryParse(res);
+        SharedConfigName.setNotificationsPerPage(number ?? 0);
+      }else{
+        showErrorMessage("Cannot get NotificationItemCount!");
+      }
+    }catch(e){
+      isLoading.value = false;
     }
   }
 
