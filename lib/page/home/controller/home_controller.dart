@@ -16,6 +16,13 @@ import 'package:eqinsuranceandroid/widgets/dialog/home_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xml/xml.dart';
+import 'package:aespack/aespack.dart';
+import "package:pointycastle/digests/sha256.dart";
+import 'package:crypto/crypto.dart' as CryptoPack;
+import 'package:encrypt/encrypt.dart' as EncryptPack;
+import 'dart:convert'  as ConvertPack;
+import 'package:eqinsuranceandroid/network/aes_encryption_helper.dart';
+
 
 class HomeBinding extends Bindings{
   @override
@@ -45,9 +52,14 @@ class HomeController extends GetxController{
   @override
   void onInit() {
     super.onInit();
+    // or this
+
     showHideButton();
     refreshNotificationCount();
     openPopupNotification();
+  }
+  Future<void> testEncrypt() async {
+
   }
 
   Future<void> openPopupNotification() async {
@@ -214,6 +226,27 @@ class HomeController extends GetxController{
 
   Future<void> showHideButton() async {
     String currentUserType = await SharedConfigName.getCurrentUserType();
+
+    print("start encrypt.....");
+    //testEncrypt();
+    var text = 'mobileapi|cauugf6ORCafNuvfhBNxLg:APA91bGWk7S0Z1we_YrKm9Hc-FVG04230kodgyuQftmKL7mf4Stwt-hypkYzSzJH19emDxnKdEQN1IclTyCfGCWAN--5qasNLr3Dxski9IcEt3WXLmN2heDG1BWZboD_Vphq3Jx7f_TG';
+    var key = '28103264-9141-4540-a55b-c4ec6596ee2dee2d'; //
+    String test = AesHelper.encrypt(key, text);
+    //var iv = '0000000000000000';
+    //var iv = CryptoPack.sha256.convert(ConvertPack.utf8.encode(iv)).toString().substring(0, 16);         // Consider the first 16 bytes of all 64 bytes
+    //var key = CryptoPack.sha256.convert(ConvertPack.utf8.encode(key)).toString().substring(0, 32);       // Consider the first 32 bytes of all 64 bytes
+    //EncryptPack.IV ivObj = EncryptPack.IV.fromUtf8(iv);
+    EncryptPack.Key keyObj = EncryptPack.Key.fromUtf8(key);
+    //final encrypter = EncryptPack.Encrypter(EncryptPack.AES(keyObj, mode: EncryptPack.AESMode.cbc));        // Apply CBC mode
+    //final decrypted = encrypter.encrypt(text,);
+    //String firstBase64Decoding = new String.fromCharCodes(ConvertPack.base64.decode(payload));              // First Base64 decoding
+    //var bytes1 = utf8.encode(key);         // data being hashed
+    //var digest1 = sha256.convert(bytes1);
+    //Future<String?> test = Aespack.encrypt(text, key, iv);
+    //String? message = await test;
+    print("encrpyted....." + test);
+    print("end encrypt.....");
+
     if(currentUserType == ConfigData.PROMO){
       isPublicUser.value = false;
       isPartner.value = false;
@@ -253,5 +286,6 @@ class HomeController extends GetxController{
         builder: (_) => HomeDialog(data: data)
     );
   }
+
 
 }
