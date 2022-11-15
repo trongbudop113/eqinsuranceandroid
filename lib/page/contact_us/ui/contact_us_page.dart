@@ -36,20 +36,22 @@ class ContactUsPage extends GetView<ContactUsController>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(width: 20),
+                        SizedBox(width: 15),
                         GestureDetector(
                           onTap: (){
                             Get.back();
                           },
                           child: Container(
                             color: Colors.transparent,
+                            width: 22,
+                            padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Image.asset(ImageResource.ic_back, width: 12),
                           ),
                         ),
                         Spacer(flex: 1),
                         Text("Contact Us", style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 19, fontWeight: FontWeight.bold, color: ColorResource.color_content_popup)),
                         Spacer(flex: 1),
-                        SizedBox(width: 32),
+                        SizedBox(width: 37),
                       ],
                     )
                 ),
@@ -60,18 +62,25 @@ class ContactUsPage extends GetView<ContactUsController>{
                     onWebViewCreated: (WebViewController webViewController) {
                       controller.webViewController.complete(webViewController);
                     },
+                    navigationDelegate: (NavigationRequest request) {
+                      if(controller.checkNavigatorLink(request.url)){
+                        return NavigationDecision.navigate;
+                      }
+                      controller.onCheckLink(request.url);
+                      return NavigationDecision.prevent;
+                    },
                     onProgress: (int progress) {
                       print('WebView is loading (progress : $progress%)');
                     },
                     onPageStarted: (String url) {
                       controller.isLoading.value = true;
                       print('Page started loading: $url');
+                      NavigationDecision.navigate;
                       controller.onCheckLink(url);
                     },
                     onPageFinished: (String url) {
                       controller.isLoading.value = false;
                       print('Page finished loading: $url');
-                      controller.onReload();
                     },
                     gestureNavigationEnabled: true,
                     backgroundColor: const Color(0x00000000),

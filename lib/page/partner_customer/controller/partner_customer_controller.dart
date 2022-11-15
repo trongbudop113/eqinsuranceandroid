@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:eqinsuranceandroid/configs/config_button.dart';
 import 'package:eqinsuranceandroid/configs/configs_data.dart';
 import 'package:eqinsuranceandroid/configs/hide_keyboard.dart';
 import 'package:eqinsuranceandroid/configs/shared_config_name.dart';
@@ -70,7 +71,7 @@ class PartnerCustomerController extends GetxController with KeyboardHiderMixin{
   }
 
   Future<void> doWhenSuccess(String response, String phone) async {
-    var separateResult = response.split("\\|");
+    var separateResult = response.split("\|");
     final String _AgentCode = separateResult[0];
     final String URL = separateResult[1];
 
@@ -82,7 +83,7 @@ class PartnerCustomerController extends GetxController with KeyboardHiderMixin{
     SharedConfigName.setAgentCode(_AgentCode);
     SharedConfigName.setPhone(phone);
     SharedConfigName.setRegisteredUserType("PROMO");
-
+    ConfigButton.singleton.showHideButton();
     Get.offAndToNamed(GetListPages.PARTNER, arguments: {'link', URL});
 
   }

@@ -45,6 +45,8 @@ class PartnerCustomerPage extends GetView<PartnerCustomerController>{
                               Get.back();
                             },
                             child: Container(
+                              width: 22,
+                              padding: EdgeInsets.symmetric(horizontal: 5),
                               color: Colors.transparent,
                               child: Image.asset(ImageResource.ic_back, width: 12),
                             ),

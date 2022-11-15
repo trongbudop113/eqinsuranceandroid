@@ -51,6 +51,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   xml: ^4.5.1
 
+  firebase_messaging:
+  flutter_local_notifications:
+  firebase_core: ^2.1.0
+
 dev_dependencies:
   flutter_launcher_icons: "^0.7.5"
   flutter_launcher_name: "^0.0.1"

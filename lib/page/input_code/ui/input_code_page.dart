@@ -30,30 +30,57 @@ class InputCodePage extends GetView<InputCodeController>{
                   )
               ),
               padding: EdgeInsets.all(15),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 50),
-                    Image.asset(ImageResource.logo1, width: Get.width * 0.5),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Container(
+                      width: double.maxFinite,
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 5),
+                          GestureDetector(
+                            onTap: (){
+                              Get.back();
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              width: 22,
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Image.asset(ImageResource.ic_back, width: 12),
+                            ),
+                          ),
+                          Spacer(flex: 1),
+                        ],
+                      )
+                  ),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Image.asset(ImageResource.logo1, width: Get.width * 0.5),
 
-                    SizedBox(height: 20),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Security Code',
-                        style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 14, color: ColorResource.color_title_popup),
-                      ),
+                        SizedBox(height: 20),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Security Code',
+                            style: StyleResource.TextStyleBlack(context).copyWith(fontSize: 14, color: ColorResource.color_title_popup),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        TextFieldWidget(onSubmit: (value){
+
+                        }, hint: "Enter Current Security Code",
+                            controller: controller.scText,
+                            isShowLeftIcon: true,
+                            leftIcon: ImageResource.key),
+
+                      ],
                     ),
-                    SizedBox(height: 10),
-                    TextFieldWidget(onSubmit: (value){
-
-                    }, hint: "Enter Current Security Code",
-                        controller: controller.scText,
-                        isShowLeftIcon: true,
-                        leftIcon: ImageResource.key),
-
-                  ],
-                ),
+                  ),
+                ],
               )
             ),
             Positioned(

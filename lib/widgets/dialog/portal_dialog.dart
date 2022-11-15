@@ -74,7 +74,8 @@ class _PortalDialogState extends State<PortalDialog> with SingleTickerProviderSt
                           "Done",
                         radius: 30,
                         onTap: (){
-                          Get.back();
+                            rs = true;
+                          Get.back(result: rs);
                         }
                       )
                     ],
@@ -87,7 +88,8 @@ class _PortalDialogState extends State<PortalDialog> with SingleTickerProviderSt
               right: 0,
               child: GestureDetector(
                 onTap: (){
-                  Get.back();
+                  rs = false;
+                  Get.back(result: rs);
                 },
                 child: Container(
                   color: Colors.transparent,

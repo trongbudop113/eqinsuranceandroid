@@ -1,4 +1,5 @@
 
+import 'package:eqinsuranceandroid/configs/config_button.dart';
 import 'package:eqinsuranceandroid/get_pages.dart';
 import 'package:eqinsuranceandroid/page/home/controller/home_controller.dart';
 import 'package:eqinsuranceandroid/page/loading/loading_page.dart';
@@ -81,11 +82,11 @@ class HomePage extends GetView<HomeController>{
                 Obx(() => Column(
                   children: [
                     Visibility(
-                      visible: controller.isPublicUser.value,
+                      visible: ConfigButton.singleton.isPublicUser.value,
                       child: Container(
                         margin: EdgeInsets.only(top: 15),
                         child: Visibility(
-                          visible: controller.isPublicUserType.value == 0,
+                          visible: ConfigButton.singleton.isPublicUserType.value == 0,
                           child: ButtonWidget.buttonBorder(context, "Public Users", onTap: (){
                             controller.getPublicUser();
                           }),
@@ -96,11 +97,11 @@ class HomePage extends GetView<HomeController>{
                       ),
                     ),
                     Visibility(
-                        visible: controller.isPartner.value,
+                        visible: ConfigButton.singleton.isPartner.value,
                       child: Container(
                         margin: EdgeInsets.only(top: 10),
                         child: Visibility(
-                          visible: controller.isPartnerType.value == 0,
+                          visible: ConfigButton.singleton.isPartnerType.value == 0,
                           child: ButtonWidget.buttonBorder(context,  "Partners", onTap: (){
                             controller.goToPartnerPage();
                           }),
@@ -111,11 +112,11 @@ class HomePage extends GetView<HomeController>{
                       )
                     ),
                     Visibility(
-                        visible: controller.isPartnerCustomer.value,
+                        visible: ConfigButton.singleton.isPartnerCustomer.value,
                         child: Container(
                           margin: EdgeInsets.only(top: 10),
                           child: Visibility(
-                            visible: controller.isPartnerCustomerType.value == 0,
+                            visible: ConfigButton.singleton.isPartnerCustomerType.value == 0,
                             child: ButtonWidget.buttonBorder(context,  "Partner Customer", onTap: (){
                               controller.goToPartnerCustomer();
                             }),

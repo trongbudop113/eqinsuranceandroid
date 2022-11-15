@@ -42,13 +42,15 @@ class ChangeSCPage extends GetView<ChangeSCController>{
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(width: 10),
+                          SizedBox(width: 5),
                           GestureDetector(
                             onTap: (){
                               Get.back();
                             },
                             child: Container(
                               color: Colors.transparent,
+                              width: 22,
+                              padding: EdgeInsets.symmetric(horizontal: 5),
                               child: Image.asset(ImageResource.ic_back, width: 12,),
                             ),
                           ),

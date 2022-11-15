@@ -1,9 +1,5 @@
 import 'package:eqinsuranceandroid/page/forget_sc/controller/forget_sc_controller.dart';
 import 'package:eqinsuranceandroid/page/loading/loading_page.dart';
-import 'package:eqinsuranceandroid/resource/image_resource.dart';
-import 'package:eqinsuranceandroid/resource/style_resource.dart';
-import 'package:eqinsuranceandroid/widgets/button_widget.dart';
-import 'package:eqinsuranceandroid/widgets/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';

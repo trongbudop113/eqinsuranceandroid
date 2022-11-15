@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:eqinsuranceandroid/configs/config_button.dart';
 import 'package:eqinsuranceandroid/configs/configs_data.dart';
 import 'package:eqinsuranceandroid/configs/hide_keyboard.dart';
 import 'package:eqinsuranceandroid/configs/shared_config_name.dart';
@@ -306,6 +307,7 @@ class RegisterController extends GetxController with KeyboardHiderMixin{
         String data = root.children[2].children.first.toString();
 
         if(CheckError.isSuccess(data)){
+          await ConfigButton.singleton.showHideButton();
           doWhenLoginSuccess(data);
         }else{
           showErrorMessage("Cannot get AgentCode!");
@@ -399,7 +401,6 @@ class RegisterController extends GetxController with KeyboardHiderMixin{
 
   void doWhenLoginSuccess(String data){
     SharedConfigName.setAgentCode(data);
-
     Get.offAndToNamed(GetListPages.PARTNER, arguments: {"res" : data});
   }
 

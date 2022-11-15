@@ -16,7 +16,7 @@ class SharedConfigName{
   static const String popupID = "popupID";
 
   static const String NotificationsPerPage = "NotificationsPerPage";
-
+  static const String TokenFirebase = "Token";
 
   static Future<void> logoutUser() async {
     var sharedPreferences = await SharedPreferences.getInstance();
@@ -32,6 +32,15 @@ class SharedConfigName{
     sharedPreferences.remove(NotificationsPerPage);
   }
 
+  static Future<void> setTokenFirebase(String token) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(TokenFirebase, token);
+  }
+
+  static Future<String> getTokenFirebase() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(TokenFirebase) ?? '';
+  }
 
   static Future<void> setNotificationsPerPage(int number) async {
     var sharedPreferences = await SharedPreferences.getInstance();
@@ -42,7 +51,7 @@ class SharedConfigName{
     var sharedPreferences = await SharedPreferences.getInstance();
     String data =  sharedPreferences.getString(userType) ?? '';
     if(data != ''){
-      return userType;
+      return data;
     }
     return ConfigData.PUBLIC;
   }
@@ -97,9 +106,9 @@ class SharedConfigName{
     return sharedPreferences.getString(sc) ?? '';
   }
 
-  static Future<void> setRegisteredUserType(String userType) async {
+  static Future<void> setRegisteredUserType(String userTypeSet) async {
     var sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(userType, userType);
+    sharedPreferences.setString(userType, userTypeSet);
   }
 
   static Future<String> getRegisteredUserType() async {
