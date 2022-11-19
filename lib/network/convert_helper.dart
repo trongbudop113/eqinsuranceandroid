@@ -86,3 +86,15 @@ List<int> decodeHex(String hex) {
 
   return convert.hex.decode(hex);
 }
+
+String toUtf8(value) {
+  var encoded = utf8.encode(value);
+  var decoded = utf8.decode(encoded);
+  return decoded;
+}
+
+String toASCII(value) {
+  var encoded = ascii.encode(value);
+  var decoded = ascii.decode(encoded);
+  return decoded;
+}

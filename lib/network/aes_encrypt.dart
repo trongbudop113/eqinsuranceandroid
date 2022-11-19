@@ -1,15 +1,39 @@
 import 'dart:convert';
+import 'package:pointycastle/block/aes_fast.dart';
 import 'dart:typed_data';
-import "package:pointycastle/export.dart";
+import 'package:pointycastle/export.dart';
+import 'package:pointycastle/key_derivators/pbkdf2.dart';
+import 'package:pointycastle/paddings/pkcs7.dart';
+import 'package:pointycastle/pointycastle.dart';
 import "package:eqinsuranceandroid/network/convert_helper.dart";
-import 'package:crypto/crypto.dart';
-// AES key size
-const KEY_SIZE = 32; // 32 byte key for AES-256
-const ITERATION_COUNT = 1000;
 
+const KEY_SIZE = 32; // 32 byte key for AES-256
+const ITERATION_COUNT = 2;
+const SALT = "EQEQEQEQEQEQEQEQ";
+const INITIAL_VECTOR = "EQEQEQEQEQEQEQEQ";
+//const PASS_PHRASE = "28103264-9141-4540-a55b-c4ec6596ee2d";
+
+///MARK: AesHelper class
 class AesHelper {
   static const CBC_MODE = 'CBC';
   static const CFB_MODE = 'CFB';
+
+  static String encryptString(String text, String key)  {
+    String encryptedString = "";
+    final mStrPassPhrase = toUtf8(key);
+    encryptedString =
+        encrypt(mStrPassPhrase, toUtf8(text), mode: CBC_MODE);
+    return encryptedString;
+  }
+
+  static String decryptString(String text, String key)  {
+    String decryptedString = "";
+    final mStrPassPhrase = toUtf8(key);
+    decryptedString =
+        decrypt(mStrPassPhrase, toUtf8(text), mode: CBC_MODE);
+
+    return decryptedString;
+  }
 
   static Uint8List deriveKey(dynamic password,
       {String salt = '',
@@ -27,13 +51,10 @@ class AesHelper {
     Pbkdf2Parameters params =
     new Pbkdf2Parameters(saltBytes, iterationCount, derivedKeyLength);
     KeyDerivator keyDerivator =
-    new PBKDF2KeyDerivator(new HMac(new SHA256Digest(), 64));
+    new PBKDF2KeyDerivator(new HMac(new SHA1Digest(), 64));
     keyDerivator.init(params);
-    var hmacSha256 = Hmac(sha256, password);
-    var bytes = utf8.encode("");
-    var  value = hmacSha256.convert(bytes);
-    //return keyDerivator.process(password);
-    return Uint8List.fromList(value.bytes);
+
+    return keyDerivator.process(password);
   }
 
   static Uint8List pad(Uint8List src, int blockSize) {
@@ -59,16 +80,14 @@ class AesHelper {
 
   static String encrypt(String password, String plaintext,
       {String mode = CBC_MODE}) {
-    Uint8List derivedKey = deriveKey(password);
+    String salt = toASCII(SALT);
+    Uint8List derivedKey = deriveKey(password, salt: salt);
     KeyParameter keyParam = new KeyParameter(derivedKey);
     BlockCipher aes = new AESFastEngine();
 
-    var rnd = FortunaRandom();
-    rnd.seed(keyParam);
-    String source = '0000000000000000';
-    List<int> list = ascii.encode(source);
-    Uint8List bytes = Uint8List.fromList(list);
-    Uint8List iv = bytes;
+    var ivStr = toASCII(INITIAL_VECTOR);
+    Uint8List iv =
+    createUint8ListFromString(ivStr);
 
     BlockCipher cipher;
     ParametersWithIV params = new ParametersWithIV(keyParam, iv);
@@ -88,24 +107,28 @@ class AesHelper {
     Uint8List textBytes = createUint8ListFromString(plaintext);
     Uint8List paddedText = pad(textBytes, aes.blockSize);
     Uint8List cipherBytes = _processBlocks(cipher, paddedText);
-    Uint8List cipherIvBytes = new Uint8List(cipherBytes.length + iv.length)
-      ..setAll(0, iv)
-      ..setAll(iv.length, cipherBytes);
 
-    return base64.encode(cipherIvBytes);
+    return base64.encode(cipherBytes);
   }
 
   static String decrypt(String password, String ciphertext,
       {String mode = CBC_MODE}) {
-    Uint8List derivedKey = deriveKey(password);
+    String salt = toASCII(SALT);
+    Uint8List derivedKey = deriveKey(password, salt: salt);
     KeyParameter keyParam = new KeyParameter(derivedKey);
     BlockCipher aes = new AESFastEngine();
 
-    Uint8List cipherIvBytes = base64.decode(ciphertext);
-    Uint8List iv = new Uint8List(aes.blockSize)
-      ..setRange(0, aes.blockSize, cipherIvBytes);
+    var ivStr = toASCII(INITIAL_VECTOR);
+    Uint8List iv = createUint8ListFromString(ivStr);
+    Uint8List cipherBytesFromEncode = base64.decode(ciphertext);
+
+    Uint8List cipherIvBytes =
+    new Uint8List(cipherBytesFromEncode.length + iv.length)
+      ..setAll(0, iv)
+      ..setAll(iv.length, cipherBytesFromEncode);
 
     BlockCipher cipher;
+
     ParametersWithIV params = new ParametersWithIV(keyParam, iv);
     switch (mode) {
       case CBC_MODE:
