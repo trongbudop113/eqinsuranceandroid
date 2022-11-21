@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        title: 'Flutter Demo',
+        title: 'EQ Insurance',
         debugShowCheckedModeBanner: false,
         theme: LightTheme.dataTheme(),
         getPages: GetListPages.singleton.listPage(),

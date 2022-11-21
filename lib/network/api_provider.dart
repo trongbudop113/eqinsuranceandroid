@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 class ApiProvider {
   final String _baseUrl = "https://internet.eqinsurance.com.sg/test/testwebMobile/eqws.asmx/";
+  //final String _baseUrl = "http://eq.verzview.com:8090/";
 
   Future<dynamic> get(String url) async {
     var responseJson;

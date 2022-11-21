@@ -15,14 +15,10 @@ import 'package:eqinsuranceandroid/page/webview/model/get_contact_req.dart';
 import 'package:eqinsuranceandroid/splash_page.dart';
 import 'package:eqinsuranceandroid/widgets/dialog/error_dialog.dart';
 import 'package:eqinsuranceandroid/widgets/dialog/home_dialog.dart';
-import 'package:eqinsuranceandroid/network/aes_encryption_helper.dart';
-import 'package:eqinsuranceandroid/network/aes_encryption.dart';
-import 'package:eqinsuranceandroid/network/aes_encrypt.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xml/xml.dart';
-import 'package:encrypt/encrypt.dart' as EncryptPack;
 
 class HomeBinding extends Bindings{
   @override
@@ -52,17 +48,18 @@ class HomeController extends GetxController{
   void onReady() {
     initFirebaseMessage();
     super.onReady();
-    print("start encrypt.....");
-    var text = 'mobileapi|cauugf6ORCafNuvfhBNxLg:APA91bGWk7S0Z1we_YrKm9Hc-FVG04230kodgyuQftmKL7mf4Stwt-hypkYzSzJH19emDxnKdEQN1IclTyCfGCWAN--5qasNLr3Dxski9IcEt3WXLmN2heDG1BWZboD_Vphq3Jx7f_TG';
-    String key = "28103264-9141-4540-a55b-c4ec6596ee2d"; //
-    String test2 = AesHelper.encryptString(text,key );
-    print("encrpyted 2....." + test2);
-    String test3 = AesHelper.decryptString("fmoY5Setq7hJyBNnous+v/5kbU3cHSyQzFigAGOa4zxS6iux2mpUBT6GMwsZU+F0aNtt3u5ngxl7yN28MRo3zjneVkQ3iPBXZfe4KGQyoQxR/r8isolBsigA5ZK+EAuJJWJLjeMAIqaSz6p0Y+MwSmxgARIRfmgjou15A4xDEFro3UkKRySA040NWQRdLuoZbbXYQP0gaCaDc9ItzW0oCT+l2vM2RNGmbQty0zylW0w=", key);
-    print("decrpyted 2....." + test3);
-    print("end encrypt.....");
+    // print("start encrypt.....");
+    // var text = 'mobileapi|cauugf6ORCafNuvfhBNxLg:APA91bGWk7S0Z1we_YrKm9Hc-FVG04230kodgyuQftmKL7mf4Stwt-hypkYzSzJH19emDxnKdEQN1IclTyCfGCWAN--5qasNLr3Dxski9IcEt3WXLmN2heDG1BWZboD_Vphq3Jx7f_TG';
+    // String key = "28103264-9141-4540-a55b-c4ec6596ee2d"; //
+    // String test2 = AesHelper.encryptString(text,key);
+    // print("encrpyted 2....." + test2);
+    // String test3 = AesHelper.decryptString("fmoY5Setq7hJyBNnous+v/5kbU3cHSyQzFigAGOa4zxS6iux2mpUBT6GMwsZU+F0aNtt3u5ngxl7yN28MRo3zjneVkQ3iPBXZfe4KGQyoQxR/r8isolBsigA5ZK+EAuJJWJLjeMAIqaSz6p0Y+MwSmxgARIRfmgjou15A4xDEFro3UkKRySA040NWQRdLuoZbbXYQP0gaCaDc9ItzW0oCT+l2vM2RNGmbQty0zylW0w=", key);
+    // print("decrpyted 2....." + test3);
+    // print("end encrypt.....");
   }
 
   void initFirebaseMessage(){
+    print("initFirebaseMessage....");
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');

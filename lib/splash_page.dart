@@ -9,7 +9,6 @@ import 'package:eqinsuranceandroid/page/loading/loading_page.dart';
 import 'package:eqinsuranceandroid/resource/image_resource.dart';
 import 'package:eqinsuranceandroid/widgets/dialog/error_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -59,9 +58,9 @@ class _SplashPageState extends State<SplashPage> {
     exit(0);
   }
 
-  late final FirebaseMessaging _firebaseMessaging;
+  //late final FirebaseMessaging _firebaseMessaging;
   Future<String> initFirebase() async {
-    _firebaseMessaging = FirebaseMessaging.instance;
+    var _firebaseMessaging = FirebaseMessaging.instance;
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await setupFlutterNotifications();
     // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(

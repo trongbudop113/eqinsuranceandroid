@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqinsuranceandroid/configs/configs_data.dart';
 import 'package:eqinsuranceandroid/configs/shared_config_name.dart';
 import 'package:eqinsuranceandroid/get_pages.dart';
+import 'package:eqinsuranceandroid/network/aes_encrypt.dart';
 import 'package:eqinsuranceandroid/network/api_name.dart';
 import 'package:eqinsuranceandroid/network/api_provider.dart';
 import 'package:eqinsuranceandroid/page/notification/models/notification_req.dart';
@@ -78,6 +79,9 @@ class PartnerController extends GetxController{
           apiUsername = temValues[3];
           apiKey = temValues[4];
           if(token != ""){
+            String input = apiUsername + "|" + token;
+            String requestKey = AesHelper.encryptString(input, apiKey);
+            requestToUpdateDeviceAPI(requestKey);
             //EncryptionData.encryptData(apiUsername + "|" + token, apiKey);
             // final key = keyLib.Key.fromUtf8(apiKey);
             // final encrypter = Encrypter(AES(key));
@@ -90,7 +94,6 @@ class PartnerController extends GetxController{
           }
         }
       }
-      isLoading.value = false;
     }catch(e){
       isLoading.value = false;
     }
