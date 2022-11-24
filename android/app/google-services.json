@@ -1,35 +1,51 @@
 {
   "project_info": {
-    "project_number": "323842693046",
-    "firebase_url": "https://eqiapp-e33c4.firebaseio.com",
-    "project_id": "eqiapp-e33c4",
-    "storage_bucket": "eqiapp-e33c4.appspot.com"
+    "project_number": "650243686882",
+    "firebase_url": "https://eqinsurance-edad5.firebaseio.com",
+    "project_id": "eqinsurance-edad5",
+    "storage_bucket": "eqinsurance-edad5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:323842693046:android:261cb56a0f09fd48095317",
+        "mobilesdk_app_id": "1:650243686882:android:985419574766cef2",
         "android_client_info": {
           "package_name": "com.quocbao.eqinsuranceandroid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "323842693046-74papjarnt1ud2t2l0dutrobsvdufd04.apps.googleusercontent.com",
+          "client_id": "650243686882-22flkbn48h6rnj10q9ibfeepk2ukl81h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quocbao.eqinsuranceandroid",
+            "certificate_hash": "12d2cb3e9d6261ddfd0dde15da4782253fb4a9a6"
+          }
+        },
+        {
+          "client_id": "650243686882-rnsni967srpsduu45kd29mnr72lrmtms.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDRAYcxNl_3MKJ7L5Xk19RV9oJuv3evytg"
+          "current_key": "AIzaSyDqno6sMG6ksiEv0x76C9jC3f0eiIIqrPc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "323842693046-74papjarnt1ud2t2l0dutrobsvdufd04.apps.googleusercontent.com",
+              "client_id": "650243686882-rnsni967srpsduu45kd29mnr72lrmtms.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "650243686882-k4fu8p58ucvfi0pkb17b67ded1e660ql.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "eqinsurance",
+                "app_store_id": "20190620"
+              }
             }
           ]
         }
