@@ -9,8 +9,8 @@ import "package:eqinsuranceandroid/network/convert_helper.dart";
 
 const KEY_SIZE = 32; // 32 byte key for AES-256
 const ITERATION_COUNT = 2;
-const SALT = "EQEQEQEQEQEQEQEQ";
-const INITIAL_VECTOR = "EQEQEQEQEQEQEQEQ";
+const SALT = "";
+const INITIAL_VECTOR = "";
 //const PASS_PHRASE = "28103264-9141-4540-a55b-c4ec6596ee2d";
 
 ///MARK: AesHelper class
